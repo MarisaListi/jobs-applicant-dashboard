@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Applicant List - JobBoard</title>
+    <meta
+      name="description"
+      content="Modern job applicant management system with advanced filtering and pagination"
+    />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header
+      class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-2">
+              <div
+                class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center"
+              >
+                <i class="fas fa-users text-white text-sm"></i>
+              </div>
+              <h1 class="text-xl font-bold text-gray-900 hidden sm:block">
+                JobBoard
+              </h1>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <button
+              id="filterBtn"
+              class="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+            >
+              <i class="fas fa-filter text-lg"></i>
+            </button>
+            <button
+              class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+            >
+              Post a Job
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <!-- Page Title & Stats -->
+      <div class="mb-6">
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">Applicant List</h2>
+        <p class="text-gray-600" id="applicantCount">Loading applications...</p>
+      </div>
+
+      <!-- Location Filter -->
+      <div class="mb-6">
+        <select
+          id="locationFilter"
+          class="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        >
+          <option value="">All Locations</option>
+          <option value="san-francisco">San Francisco, CA</option>
+          <option value="new-york">New York, NY</option>
+          <option value="chicago">Chicago, IL</option>
+          <option value="austin">Austin, TX</option>
+          <option value="seattle">Seattle, WA</option>
+          <option value="boston">Boston, MA</option>
+          <option value="denver">Denver, CO</option>
+          <option value="portland">Portland, OR</option>
+          <option value="phoenix">Phoenix, AZ</option>
+          <option value="miami">Miami, FL</option>
+          <option value="atlanta">Atlanta, GA</option>
+          <option value="las-vegas">Las Vegas, NV</option>
+          <option value="nashville">Nashville, TN</option>
+          <option value="salt-lake-city">Salt Lake City, UT</option>
+          <option value="sacramento">Sacramento, CA</option>
+          <option value="san-diego">San Diego, CA</option>
+          <option value="minneapolis">Minneapolis, MN</option>
+          <option value="tampa">Tampa, FL</option>
+          <option value="raleigh">Raleigh, NC</option>
+          <option value="richmond">Richmond, VA</option>
+        </select>
+      </div>
+
+      <!-- Applicant Cards -->
+      <div id="applicantList" class="space-y-4">
+        <!-- Loading state will be injected here -->
+      </div>
+
+      <!-- Pagination -->
+      <div id="paginationContainer" class="mt-8" style="display: none">
+        <div
+          class="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0"
+        >
+          <!-- Items per page selector -->
+          <div class="flex items-center space-x-2">
+            <label for="itemsPerPage" class="text-sm text-gray-700"
+              >Show:</label
+            >
+            <select
+              id="itemsPerPage"
+              class="px-3 py-1 border border-gray-300 rounded-lg bg-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="5" selected>5 per page</option>
+              <option value="10">10 per page</option>
+              <option value="20">20 per page</option>
+            </select>
+          </div>
+
+          <!-- Pagination controls -->
+          <div id="pagination" class="pagination">
+            <!-- Pagination buttons will be generated here -->
+          </div>
+
+          <!-- Results info -->
+          <div class="text-sm text-gray-600" id="paginationInfo">
+            <!-- Pagination info will be shown here -->
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Filter Sidebar -->
+    <div
+      id="filterOverlay"
+      class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden overlay"
+    >
+      <div
+        id="filterSidebar"
+        class="filter-slide fixed right-0 top-0 h-full w-full sm:w-96 bg-white shadow-xl z-50"
+      >
+        <div class="p-6 border-b border-gray-200">
+          <div class="flex justify-between items-center">
+            <h3 class="text-lg font-semibold text-gray-900">Sort & Filter</h3>
+            <button
+              id="closeFilter"
+              class="p-2 text-gray-400 hover:text-gray-600 rounded-lg"
+            >
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="p-6 space-y-6 overflow-y-auto h-full pb-24">
+          <!-- Sort By -->
+          <div>
+            <h4 class="text-sm font-medium text-gray-900 mb-3">Sort By</h4>
+            <div class="space-y-2">
+              <label
+                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer"
+              >
+                <input
+                  type="radio"
+                  name="sort"
+                  value="date"
+                  class="text-blue-600"
+                  checked
+                />
+                <div>
+                  <div class="font-medium text-gray-900">Date Applied</div>
+                  <div class="text-sm text-gray-500">Most recent first</div>
+                </div>
+              </label>
+              <label
+                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer"
+              >
+                <input
+                  type="radio"
+                  name="sort"
+                  value="distance"
+                  class="text-blue-600"
+                />
+                <div>
+                  <div class="font-medium text-gray-900">Distance</div>
+                  <div class="text-sm text-gray-500">Closest first</div>
+                </div>
+              </label>
+              <label
+                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer"
+              >
+                <input
+                  type="radio"
+                  name="sort"
+                  value="resume"
+                  class="text-blue-600"
+                />
+                <div>
+                  <div class="font-medium text-gray-900">Resume Match</div>
+                  <div class="text-sm text-gray-500">Best match first</div>
+                </div>
+              </label>
+              <label
+                class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer"
+              >
+                <input
+                  type="radio"
+                  name="sort"
+                  value="personality"
+                  class="text-blue-600"
+                />
+                <div>
+                  <div class="font-medium text-gray-900">Personality Match</div>
+                  <div class="text-sm text-gray-500">Best fit first</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Filter by Resume Match -->
+          <div>
+            <h4 class="text-sm font-medium text-gray-900 mb-3">
+              Resume Match Score
+            </h4>
+            <div class="space-y-3">
+              <div class="flex justify-between text-sm text-gray-600">
+                <span>0%</span>
+                <span>50%</span>
+                <span>100%</span>
+              </div>
+              <input
+                type="range"
+                id="resumeRange"
+                min="0"
+                max="100"
+                value="0"
+                class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+              />
+              <div class="text-center text-sm text-gray-600">
+                Minimum:
+                <span id="resumeValue" class="font-medium text-blue-600"
+                  >0%</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Filter by Personality Match -->
+          <div>
+            <h4 class="text-sm font-medium text-gray-900 mb-3">
+              Personality Match Score
+            </h4>
+            <div class="space-y-3">
+              <div class="flex justify-between text-sm text-gray-600">
+                <span>0%</span>
+                <span>50%</span>
+                <span>100%</span>
+              </div>
+              <input
+                type="range"
+                id="personalityRange"
+                min="0"
+                max="100"
+                value="0"
+                class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+              />
+              <div class="text-center text-sm text-gray-600">
+                Minimum:
+                <span id="personalityValue" class="font-medium text-blue-600"
+                  >0%</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Apply Filters Button -->
+          <div class="pt-4">
+            <button
+              id="applyFilters"
+              class="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+            >
+              Apply Filters
+            </button>
+            <button
+              id="clearFilters"
+              class="w-full mt-2 text-gray-600 py-2 text-sm hover:text-gray-800 transition-colors"
+            >
+              Clear All Filters
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

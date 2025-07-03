@@ -17,6 +17,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: opacity 0.3s ease;
 }
 
 #videoOverlay {
@@ -24,10 +25,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  backdrop-filter: blur(2px);
 }
 
 #videoOverlay:hover {
   background: rgba(0, 0, 0, 0.4);
+}
+
+/* Video loading and error states */
+.video-loading {
+  opacity: 0.7;
+}
+
+.video-error {
+  opacity: 0.5;
 }
 
 /* Modern Card Styles */

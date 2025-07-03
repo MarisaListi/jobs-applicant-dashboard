@@ -1,5 +1,6 @@
 import { APPLICANTS_DATA } from '../data/applicants';
 import { LoadingManager } from '../utils/LoadingManager';
+import sampleVideo from '../../assets/videos/video.mp4';
 
 export class ApplicantDetailsManager {
   constructor() {
@@ -139,17 +140,13 @@ export class ApplicantDetailsManager {
 
     if (!video) return;
 
-    // Try multiple video sources - prioritizing the actual location
+    // Try multiple video sources - prioritizing webpack processed asset
     const videoSources = [
-      'src/assets/videos/video.mp4', // Primary location
-      '../src/assets/videos/video.mp4', // If accessed from dist folder
-      './assets/videos/video.mp4', // Relative from current location
-      'assets/videos/video.mp4', // Direct assets path
-      '../assets/videos/video.mp4', // One level up
-      '../../assets/videos/video.mp4', // Two levels up
-      '/src/assets/videos/video.mp4', // Absolute path
-      'video.mp4', // Fallback to root
-      './video.mp4' // Current directory
+      sampleVideo, // Webpack processed asset (primary)
+      'assets/videos/video.mp4', // Production build path
+      './assets/videos/video.mp4', // Relative path
+      'src/assets/videos/video.mp4', // Development source path
+      'video.mp4' // Root fallback
     ];
 
     let sourceIndex = 0;
@@ -157,22 +154,36 @@ export class ApplicantDetailsManager {
 
     const tryNextSource = () => {
       if (sourceIndex >= videoSources.length) {
-        // All sources failed, show error state
+        // All sources failed, show improved error state
         overlay.innerHTML = `
           <div class="text-center text-white">
-            <div class="w-20 h-20 bg-red-500/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-4 mx-auto">
-              <i class="fas fa-video-slash text-3xl"></i>
+            <div class="w-20 h-20 bg-gray-600/40 backdrop-blur-sm rounded-full flex items-center justify-center mb-4 mx-auto">
+              <i class="fas fa-video text-3xl opacity-75"></i>
             </div>
-            <p class="text-lg font-medium">Video Unavailable</p>
-            <p class="text-sm opacity-75 mt-2">Sample video not found</p>
-            <p class="text-xs opacity-50 mt-4">Place video.mp4 in the project root directory</p>
+            <p class="text-lg font-medium">Video Preview</p>
+            <p class="text-sm opacity-75 mt-2">Video will be available soon</p>
+            <p class="text-xs opacity-50 mt-4">Contact candidate directly for more information</p>
           </div>
         `;
+        // Make overlay non-clickable since no video is available
+        overlay.style.cursor = 'default';
         return;
       }
 
       const source = videoSources[sourceIndex];
       console.log(`Trying video source: ${source}`);
+
+      // Show loading state
+      video.classList.add('video-loading');
+      overlay.innerHTML = `
+        <div class="text-center text-white">
+          <div class="w-20 h-20 bg-blue-500/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-4 mx-auto animate-pulse">
+            <i class="fas fa-spinner fa-spin text-3xl"></i>
+          </div>
+          <p class="text-lg font-medium">Loading Video...</p>
+          <p class="text-sm opacity-75 mt-2">Please wait</p>
+        </div>
+      `;
 
       // Update video source
       video.src = source;
@@ -185,7 +196,8 @@ export class ApplicantDetailsManager {
       console.log('Video loaded successfully');
       videoLoaded = true;
 
-      // Update overlay for successful load
+      // Remove loading state and update overlay for successful load
+      video.classList.remove('video-loading');
       overlay.innerHTML = `
         <div class="text-center text-white transform group-hover:scale-110 transition-transform">
           <div class="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-4 mx-auto shadow-2xl group-hover:bg-white/30">
@@ -221,7 +233,7 @@ export class ApplicantDetailsManager {
     // Click overlay to play
     overlay.addEventListener('click', (e) => {
       e.preventDefault();
-      if (videoLoaded) {
+      if (videoLoaded && video.readyState >= 2) {
         video.play().catch((err) => {
           console.error('Play error:', err);
         });

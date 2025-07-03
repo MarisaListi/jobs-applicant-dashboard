@@ -59,6 +59,12 @@ module.exports = (env, argv) => {
         chunks: ['main']
       }),
 
+      new HtmlWebpackPlugin({
+        template: './src/job-description.html',
+        filename: 'job-description.html',
+        chunks: ['main']
+      }),
+
       ...(isProduction
         ? [
             new MiniCssExtractPlugin({

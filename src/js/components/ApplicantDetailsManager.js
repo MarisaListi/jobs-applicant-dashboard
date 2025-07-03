@@ -17,6 +17,7 @@ export class ApplicantDetailsManager {
   init() {
     this.loadingManager.showDetailsLoading();
     this.bindEvents();
+    this.initEnhancedFeatures();
 
     // Simulate loading delay
     setTimeout(() => {
@@ -42,12 +43,10 @@ export class ApplicantDetailsManager {
     const chevron = $(`#${accordionName}-chevron`);
 
     if (content.hasClass('hidden')) {
-      content.removeClass('hidden').slideDown(300);
+      content.removeClass('hidden');
       chevron.removeClass('fa-chevron-down').addClass('fa-chevron-up');
     } else {
-      content.slideUp(300, function () {
-        content.addClass('hidden');
-      });
+      content.addClass('hidden');
       chevron.removeClass('fa-chevron-up').addClass('fa-chevron-down');
     }
   }
@@ -67,12 +66,12 @@ export class ApplicantDetailsManager {
   }
 
   populateApplicantDetails(applicant) {
-    // Main profile information
+    // Main header information
     $('#applicantAvatarMain').attr('src', applicant.avatar).attr('alt', applicant.name);
     $('#applicantNameMain').text(applicant.name);
-    $('#applicantLocationMain').text(applicant.location);
-    $('#applicantDistanceMain').text(applicant.distance);
-    $('#applicantAppliedDateMain').text(
+    $('#applicantLocationMain').append(applicant.location);
+    $('#applicantDistanceMain').append(applicant.distance);
+    $('#applicantAppliedDateMain').append(
       new Date(applicant.appliedDate).toLocaleDateString('en-US', {
         month: 'short',
         day: 'numeric',
@@ -80,7 +79,7 @@ export class ApplicantDetailsManager {
       })
     );
 
-    // Match scores without >>> symbols
+    // Match scores
     $('#resumeMatchScore').text(`${applicant.resumeMatch}%`);
     $('#personalityMatchScore').text(`${applicant.personalityMatch}%`);
 
@@ -88,23 +87,35 @@ export class ApplicantDetailsManager {
     const overallScore = Math.round((applicant.resumeMatch + applicant.personalityMatch) / 2);
     $('#overallScore').text(`${overallScore}%`);
 
-    // Animate progress bars
+    // Animate progress bars and circle
     setTimeout(() => {
       $('#resumeProgressBar').css('width', applicant.resumeMatch + '%');
       $('#personalityProgressBar').css('width', applicant.personalityMatch + '%');
+
+      // Animate circular progress
+      const circle = document.getElementById('overallProgressCircle');
+      if (circle) {
+        const circumference = 2 * Math.PI * 56; // radius = 56
+        const offset = circumference - (overallScore / 100) * circumference;
+        circle.style.strokeDashoffset = offset;
+      }
     }, 500);
 
     // Set application status
-    $('#applicationStatus').val(applicant.status);
+    $('#applicationStatus').val(applicant.status || 'new');
 
     // Education description
-    const educationText = `The candidate exceeds the typical educational requirements with both a ${applicant.education} in relevant engineering fields, with a strong academic record (High Honours, 95th percentile).`;
+    const educationText = `The candidate has a ${applicant.education} with strong academic performance and relevant coursework in software engineering and computer science.`;
     $('#educationDescription').text(educationText);
 
     // Contact Information
     $('#applicantEmailContact').text(applicant.email);
-    $('#applicantPhoneContact').text(applicant.phone || '444-555-6666');
-    $('#applicantEducationContact').text(applicant.education);
+    $('#applicantPhoneContact').text(applicant.phone || '+1 (555) 123-4567');
+    $('#applicantLocationContact').text(applicant.location);
+
+    // Education & Experience
+    $('#applicantEducationDetail').text(applicant.education);
+    $('#applicantExperienceDetail').text(`${applicant.experience} of professional experience`);
 
     // Skills
     this.populateSkills(applicant.skills);
@@ -112,11 +123,11 @@ export class ApplicantDetailsManager {
     // Custom Questions
     this.populateCustomQuestions(applicant);
 
-    // Setup video with multiple fallback paths
+    // Setup video
     this.setupVideo();
 
     // Update page title
-    document.title = `${applicant.name} - Applicant Details - JobMap`;
+    document.title = `${applicant.name} - Applicant Details - JobBoard`;
 
     // Show details and hide loading
     this.loadingManager.showDetailsContent();
@@ -124,90 +135,124 @@ export class ApplicantDetailsManager {
 
   setupVideo() {
     const video = document.getElementById('applicantVideo');
-    if (video) {
-      // Multiple video sources to try
-      const videoSources = ['./video.mp4', 'video.mp4', 'assets/videos/video.mp4', 'src/video.mp4'];
+    const overlay = document.getElementById('videoOverlay');
 
-      let currentSourceIndex = 0;
+    if (!video) return;
 
-      const tryNextSource = () => {
-        if (currentSourceIndex < videoSources.length) {
-          const source = video.querySelector('source');
-          if (source) {
-            source.src = videoSources[currentSourceIndex];
-            video.load();
-            console.log(`Trying video source: ${videoSources[currentSourceIndex]}`);
-            currentSourceIndex++;
-          }
-        } else {
-          // All sources failed
-          $('#videoOverlay').html(`
-                        <div class="text-center text-white">
-                            <div class="w-16 h-16 bg-red-500/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-4 mx-auto">
-                                <i class="fas fa-video-slash text-2xl"></i>
-                            </div>
-                            <p class="text-sm font-medium mb-2">Video not available</p>
-                            <p class="text-xs opacity-75">Place video.mp4 in project root</p>
-                        </div>
-                    `);
-        }
-      };
+    // Try multiple video sources - prioritizing the actual location
+    const videoSources = [
+      'src/assets/videos/video.mp4', // Primary location
+      '../src/assets/videos/video.mp4', // If accessed from dist folder
+      './assets/videos/video.mp4', // Relative from current location
+      'assets/videos/video.mp4', // Direct assets path
+      '../assets/videos/video.mp4', // One level up
+      '../../assets/videos/video.mp4', // Two levels up
+      '/src/assets/videos/video.mp4', // Absolute path
+      'video.mp4', // Fallback to root
+      './video.mp4' // Current directory
+    ];
 
-      // Video event listeners
-      video.addEventListener('error', (e) => {
-        console.error('Video error for source:', video.querySelector('source')?.src);
+    let sourceIndex = 0;
+    let videoLoaded = false;
+
+    const tryNextSource = () => {
+      if (sourceIndex >= videoSources.length) {
+        // All sources failed, show error state
+        overlay.innerHTML = `
+          <div class="text-center text-white">
+            <div class="w-20 h-20 bg-red-500/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-4 mx-auto">
+              <i class="fas fa-video-slash text-3xl"></i>
+            </div>
+            <p class="text-lg font-medium">Video Unavailable</p>
+            <p class="text-sm opacity-75 mt-2">Sample video not found</p>
+            <p class="text-xs opacity-50 mt-4">Place video.mp4 in the project root directory</p>
+          </div>
+        `;
+        return;
+      }
+
+      const source = videoSources[sourceIndex];
+      console.log(`Trying video source: ${source}`);
+
+      // Update video source
+      video.src = source;
+      video.load();
+      sourceIndex++;
+    };
+
+    // Video event handlers
+    video.addEventListener('loadeddata', () => {
+      console.log('Video loaded successfully');
+      videoLoaded = true;
+
+      // Update overlay for successful load
+      overlay.innerHTML = `
+        <div class="text-center text-white transform group-hover:scale-110 transition-transform">
+          <div class="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-4 mx-auto shadow-2xl group-hover:bg-white/30">
+            <i class="fas fa-play text-3xl ml-1"></i>
+          </div>
+          <p class="text-lg font-medium">Watch Introduction</p>
+          <p class="text-sm opacity-75">Get to know the candidate</p>
+        </div>
+      `;
+    });
+
+    video.addEventListener('error', (e) => {
+      console.error(`Video error for source: ${video.src}`, e);
+      if (!videoLoaded) {
         tryNextSource();
-      });
+      }
+    });
 
-      video.addEventListener('loadstart', () => {
-        console.log('Video loading started');
-      });
+    video.addEventListener('play', () => {
+      overlay.style.display = 'none';
+    });
 
-      video.addEventListener('canplay', () => {
-        console.log('Video ready to play');
-        // Video loaded successfully, hide any error messages
-        $('#videoOverlay').html(`
-                    <div class="text-center text-white transform group-hover:scale-110 transition-transform">
-                        <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-4 mx-auto shadow-lg">
-                            <i class="fas fa-play text-2xl ml-1"></i>
-                        </div>
-                        <p class="text-sm font-medium">Watch Introduction</p>
-                    </div>
-                `);
-      });
+    video.addEventListener('pause', () => {
+      if (video.currentTime > 0 && video.currentTime < video.duration) {
+        overlay.style.display = 'flex';
+      }
+    });
 
-      video.addEventListener('ended', () => {
-        $('#videoOverlay').show();
-        console.log('Video ended');
-      });
+    video.addEventListener('ended', () => {
+      overlay.style.display = 'flex';
+    });
 
-      video.addEventListener('play', () => {
-        $('#videoOverlay').hide();
-      });
+    // Click overlay to play
+    overlay.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (videoLoaded) {
+        video.play().catch((err) => {
+          console.error('Play error:', err);
+        });
+      }
+    });
 
-      video.addEventListener('pause', () => {
-        if (video.currentTime < video.duration) {
-          $('#videoOverlay').show();
-        }
-      });
-
-      // Start with first source
-      tryNextSource();
-    }
+    // Start trying sources
+    tryNextSource();
   }
 
   populateSkills(skills) {
     const skillsContainer = $('#skillsList');
     skillsContainer.empty();
 
+    const skillColors = [
+      'from-blue-500 to-blue-600',
+      'from-purple-500 to-purple-600',
+      'from-green-500 to-green-600',
+      'from-pink-500 to-pink-600',
+      'from-indigo-500 to-indigo-600'
+    ];
+
     skills.forEach((skill, index) => {
+      const colorClass = skillColors[index % skillColors.length];
       setTimeout(() => {
         skillsContainer.append(`
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-sm hover:shadow-md transition-all transform hover:scale-105">
-                        ${skill}
-                    </span>
-                `);
-      }, index * 100);
+          <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium bg-gradient-to-r ${colorClass} text-white shadow-sm hover:shadow-md transition-all transform hover:scale-105 cursor-default">
+            ${skill}
+          </span>
+        `);
+      }, index * 50);
     });
   }
 
@@ -216,89 +261,99 @@ export class ApplicantDetailsManager {
     const questionsContainer = $('#customQuestions');
     questionsContainer.empty();
 
-    // Use real application questions if available
     const questionList = [
       {
         question: 'What is your availability to start?',
-        answer: questions.availability || 'Available to start immediately'
+        answer: questions.availability || 'Available to start immediately',
+        icon: 'fa-calendar-check',
+        color: 'blue'
       },
       {
         question: 'What are your salary expectations?',
-        answer: questions.salary || '$85,000 - $95,000'
+        answer: questions.salary || '$85,000 - $95,000',
+        icon: 'fa-dollar-sign',
+        color: 'green'
       },
       {
         question: 'What is your remote work preference?',
-        answer: questions.remote || 'Open to hybrid work'
+        answer: questions.remote || 'Open to hybrid work',
+        icon: 'fa-laptop-house',
+        color: 'purple'
       },
       {
         question: 'What was your biggest professional challenge?',
         answer:
           questions.challenge ||
-          'Led a team migration from legacy PHP to modern React/Node.js stack'
+          'Led a team migration from legacy PHP to modern React/Node.js stack',
+        icon: 'fa-trophy',
+        color: 'orange'
       }
     ];
 
     questionList.forEach((item, index) => {
+      const bgColor = {
+        blue: 'bg-blue-50',
+        green: 'bg-green-50',
+        purple: 'bg-purple-50',
+        orange: 'bg-orange-50'
+      }[item.color];
+
+      const iconColor = {
+        blue: 'text-blue-600',
+        green: 'text-green-600',
+        purple: 'text-purple-600',
+        orange: 'text-orange-600'
+      }[item.color];
+
       questionsContainer.append(`
-                <div class="p-6 bg-gray-50 rounded-xl border border-gray-100 hover:shadow-sm transition-all">
-                    <div class="flex items-start space-x-4">
-                        <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                            <span class="text-blue-600 font-bold text-sm">${index + 1}</span>
-                        </div>
-                        <div class="flex-1">
-                            <h4 class="font-semibold text-gray-900 mb-3">${item.question}</h4>
-                            <p class="text-gray-700 leading-relaxed">${item.answer}</p>
-                        </div>
-                    </div>
-                </div>
-            `);
+        <div class="p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+          <div class="flex items-start space-x-3">
+            <div class="w-8 h-8 ${bgColor} rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+              <i class="fas ${item.icon} ${iconColor} text-sm"></i>
+            </div>
+            <div class="flex-1">
+              <h4 class="font-medium text-gray-900 text-sm mb-1">${item.question}</h4>
+              <p class="text-gray-700 text-sm leading-relaxed">${item.answer}</p>
+            </div>
+          </div>
+        </div>
+      `);
     });
   }
 
   playVideo(e) {
     e.preventDefault();
     const video = document.getElementById('applicantVideo');
-    const overlay = document.getElementById('videoOverlay');
 
-    if (video && overlay) {
-      overlay.style.display = 'none';
-      video
-        .play()
-        .then(() => {
-          console.log('Video started playing');
-        })
-        .catch((error) => {
-          console.error('Video play failed:', error);
-          // Show error message if video fails to play
-          overlay.style.display = 'flex';
-          $(overlay).html(`
-                    <div class="text-center text-white">
-                        <div class="w-12 h-12 bg-red-500 bg-opacity-20 rounded-full flex items-center justify-center mb-3 mx-auto">
-                            <i class="fas fa-exclamation-triangle text-lg"></i>
-                        </div>
-                        <p class="text-xs">Cannot play video</p>
-                        <p class="text-xs mt-1">File may be missing or corrupted</p>
-                    </div>
-                `);
-        });
+    if (video) {
+      video.play().catch((error) => {
+        console.error('Video play failed:', error);
+      });
     }
   }
 
   updateStatus(e) {
     const newStatus = $(e.target).val();
     console.log('Status updated to:', newStatus);
-    // Here you would save to backend
 
-    // Update visual feedback
-    const statusText = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
-    // You could add a toast notification here
+    // Show toast notification
+    this.showToast(`Status updated to: ${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}`);
   }
 
-  // Additional utility methods
-  getApplicantData() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const applicantId = urlParams.get('id');
-    return this.applicantsData[applicantId] || null;
+  showToast(message) {
+    const toast = $(`
+      <div class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white px-6 py-3 rounded-lg shadow-lg z-50 opacity-0 transition-opacity">
+        ${message}
+      </div>
+    `);
+
+    $('body').append(toast);
+
+    setTimeout(() => toast.addClass('opacity-100'), 100);
+    setTimeout(() => {
+      toast.removeClass('opacity-100');
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
   }
 
   // Navigate to next/previous applicant
@@ -325,62 +380,32 @@ export class ApplicantDetailsManager {
     $(document).on('keydown', (e) => {
       switch (e.key) {
         case 'ArrowLeft':
-          e.preventDefault();
-          this.navigateToApplicant('prev');
+          if (!$(e.target).is('input, textarea, select')) {
+            e.preventDefault();
+            this.navigateToApplicant('prev');
+          }
           break;
         case 'ArrowRight':
-          e.preventDefault();
-          this.navigateToApplicant('next');
+          if (!$(e.target).is('input, textarea, select')) {
+            e.preventDefault();
+            this.navigateToApplicant('next');
+          }
           break;
         case 'Escape':
-          e.preventDefault();
-          window.history.back();
-          break;
-        case ' ': // Spacebar for play/pause
-          e.preventDefault();
-          this.toggleVideo();
+          if (!$(e.target).is('input, textarea, select')) {
+            e.preventDefault();
+            window.history.back();
+          }
           break;
       }
     });
-  }
-
-  toggleVideo() {
-    const video = document.getElementById('applicantVideo');
-    if (video) {
-      if (video.paused) {
-        this.playVideo({ preventDefault: () => {} });
-      } else {
-        video.pause();
-        $('#videoOverlay').show();
-      }
-    }
   }
 
   // Initialize enhanced features
   initEnhancedFeatures() {
     this.bindKeyboardEvents();
 
-    // Add navigation buttons if desired
-    this.addNavigationButtons();
-  }
-
-  addNavigationButtons() {
-    const navigationHtml = `
-            <div class="fixed right-4 top-1/2 transform -translate-y-1/2 space-y-2 z-40">
-                <button onclick="applicantDetailsManager.navigateToApplicant('prev')" 
-                        class="bg-white shadow-lg rounded-full p-3 hover:bg-gray-50 transition-colors">
-                    <i class="fas fa-chevron-up text-gray-600"></i>
-                </button>
-                <button onclick="applicantDetailsManager.navigateToApplicant('next')" 
-                        class="bg-white shadow-lg rounded-full p-3 hover:bg-gray-50 transition-colors">
-                    <i class="fas fa-chevron-down text-gray-600"></i>
-                </button>
-            </div>
-        `;
-
-    $('body').append(navigationHtml);
-
-    // Make instance globally available for onclick handlers
+    // Make instance globally available for navigation buttons
     window.applicantDetailsManager = this;
   }
 }

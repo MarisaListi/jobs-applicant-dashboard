@@ -173,96 +173,102 @@
                 <h2 class="text-xl font-bold text-white mb-1">Match Scores</h2>
                 <p class="text-blue-100 text-sm">AI-powered compatibility analysis</p>
               </div>
-              <div class="p-6 space-y-6">
-                <!-- Overall Score -->
-                <div class="text-center pb-6 border-b border-gray-100">
-                  <div class="relative inline-flex items-center justify-center">
-                    <svg class="w-32 h-32 transform -rotate-90">
-                      <circle
-                        cx="64"
-                        cy="64"
-                        r="56"
-                        stroke="#e5e7eb"
-                        stroke-width="12"
-                        fill="none"
-                      />
-                      <circle
-                        id="overallProgressCircle"
-                        cx="64"
-                        cy="64"
-                        r="56"
-                        stroke="url(#gradient)"
-                        stroke-width="12"
-                        fill="none"
-                        stroke-dasharray="351.86"
-                        stroke-dashoffset="351.86"
-                        stroke-linecap="round"
-                        class="transition-all duration-1000"
-                      />
-                      <defs>
-                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                          <stop offset="0%" style="stop-color: #3b82f6" />
-                          <stop offset="100%" style="stop-color: #8b5cf6" />
-                        </linearGradient>
-                      </defs>
-                    </svg>
-                    <div class="absolute">
-                      <div id="overallScore" class="text-3xl font-bold text-gray-900">0%</div>
-                      <div class="text-xs text-gray-500">Overall</div>
+              <div class="p-6">
+                <!-- Compact Layout: Overall Score (Left) + Individual Matches (Right) -->
+                <div class="flex flex-col md:flex-row gap-6 items-start">
+                  <!-- Left Side: Overall Score -->
+                  <div class="flex-shrink-0 text-center w-full md:w-auto">
+                    <div class="relative inline-flex items-center justify-center">
+                      <svg class="w-32 h-32 transform -rotate-90">
+                        <circle
+                          cx="64"
+                          cy="64"
+                          r="56"
+                          stroke="#e5e7eb"
+                          stroke-width="12"
+                          fill="none"
+                        />
+                        <circle
+                          id="overallProgressCircle"
+                          cx="64"
+                          cy="64"
+                          r="56"
+                          stroke="url(#gradient)"
+                          stroke-width="12"
+                          fill="none"
+                          stroke-dasharray="351.86"
+                          stroke-dashoffset="351.86"
+                          stroke-linecap="round"
+                          class="transition-all duration-1000"
+                        />
+                        <defs>
+                          <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color: #3b82f6" />
+                            <stop offset="100%" style="stop-color: #8b5cf6" />
+                          </linearGradient>
+                        </defs>
+                      </svg>
+                      <div class="absolute">
+                        <div id="overallScore" class="text-3xl font-bold text-gray-900">0%</div>
+                        <div class="text-xs text-gray-500">Overall</div>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <!-- Resume Match -->
-                <div>
-                  <div class="flex items-center justify-between mb-3">
-                    <div class="flex items-center space-x-2">
-                      <div
-                        class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center"
-                      >
-                        <i class="fas fa-file-alt text-blue-600"></i>
+                  <!-- Right Side: Individual Matches -->
+                  <div class="flex-1 space-y-6 w-full">
+                    <!-- Resume Match -->
+                    <div>
+                      <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center space-x-2">
+                          <div
+                            class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center"
+                          >
+                            <i class="fas fa-file-alt text-blue-600"></i>
+                          </div>
+                          <div>
+                            <h3 class="font-semibold text-gray-900">Resume Match</h3>
+                            <p class="text-xs text-gray-500">Skills & Experience</p>
+                          </div>
+                        </div>
+                        <span id="resumeMatchScore" class="text-2xl font-bold text-blue-600"></span>
                       </div>
-                      <div>
-                        <h3 class="font-semibold text-gray-900">Resume Match</h3>
-                        <p class="text-xs text-gray-500">Skills & Experience</p>
+                      <div class="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
+                        <div
+                          id="resumeProgressBar"
+                          class="bg-gradient-to-r from-blue-500 to-blue-600 h-3 rounded-full transition-all duration-1000"
+                          style="width: 0%"
+                        ></div>
                       </div>
                     </div>
-                    <span id="resumeMatchScore" class="text-2xl font-bold text-blue-600"></span>
-                  </div>
-                  <div class="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
-                    <div
-                      id="resumeProgressBar"
-                      class="bg-gradient-to-r from-blue-500 to-blue-600 h-3 rounded-full transition-all duration-1000"
-                      style="width: 0%"
-                    ></div>
-                  </div>
-                </div>
 
-                <!-- Personality Match -->
-                <div>
-                  <div class="flex items-center justify-between mb-3">
-                    <div class="flex items-center space-x-2">
-                      <div
-                        class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center"
-                      >
-                        <i class="fas fa-brain text-purple-600"></i>
+                    <!-- Personality Match -->
+                    <div>
+                      <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center space-x-2">
+                          <div
+                            class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center"
+                          >
+                            <i class="fas fa-brain text-purple-600"></i>
+                          </div>
+                          <div>
+                            <h3 class="font-semibold text-gray-900">Personality Match</h3>
+                            <p class="text-xs text-gray-500">Culture Fit</p>
+                          </div>
+                        </div>
+                        <span
+                          id="personalityMatchScore"
+                          class="text-2xl font-bold text-purple-600"
+                        ></span>
                       </div>
-                      <div>
-                        <h3 class="font-semibold text-gray-900">Personality Match</h3>
-                        <p class="text-xs text-gray-500">Culture Fit</p>
+                      <div class="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
+                        <div
+                          id="personalityProgressBar"
+                          class="bg-gradient-to-r from-purple-500 to-purple-600 h-3 rounded-full transition-all duration-1000"
+                          style="width: 0%"
+                        ></div>
                       </div>
                     </div>
-                    <span
-                      id="personalityMatchScore"
-                      class="text-2xl font-bold text-purple-600"
-                    ></span>
-                  </div>
-                  <div class="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
-                    <div
-                      id="personalityProgressBar"
-                      class="bg-gradient-to-r from-purple-500 to-purple-600 h-3 rounded-full transition-all duration-1000"
-                      style="width: 0%"
-                    ></div>
                   </div>
                 </div>
               </div>

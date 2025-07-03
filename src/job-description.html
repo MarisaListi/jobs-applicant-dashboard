@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Job Description - JobBoard</title>
+    <meta
+      name="description"
+      content="Detailed job posting with comprehensive information about position, requirements, and benefits"
+    />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center space-x-4">
+            <button
+              onclick="goBack()"
+              class="back-button flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors group"
+            >
+              <i class="fas fa-arrow-left group-hover:-translate-x-1 transition-transform"></i>
+              <span class="hidden sm:inline">Back to Jobs</span>
+            </button>
+            <div class="flex items-center space-x-2">
+              <div
+                class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center shadow-sm"
+              >
+                <i class="fas fa-briefcase text-white text-sm"></i>
+              </div>
+              <h1 class="text-xl font-bold text-gray-900">JobBoard</h1>
+            </div>
+          </div>
+          <div class="flex items-center space-x-4">
+            <button
+              class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-blue-600 hover:to-blue-700 transition-all shadow-sm"
+            >
+              Post a Job
+            </button>
+            <div class="relative cursor-pointer">
+              <i
+                class="fas fa-bell text-gray-600 text-lg hover:text-gray-800 transition-colors"
+              ></i>
+              <span
+                class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"
+              ></span>
+            </div>
+            <div
+              class="w-8 h-8 bg-gradient-to-br from-gray-200 to-gray-300 rounded-full cursor-pointer hover:shadow-md transition-shadow"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Loading State -->
+      <div id="loadingState" class="space-y-6">
+        <!-- Skeleton Header -->
+        <div class="bg-white rounded-2xl p-8 shadow-sm">
+          <div class="flex items-start space-x-6 mb-6">
+            <div class="w-20 h-20 bg-gray-200 rounded-xl animate-pulse"></div>
+            <div class="flex-1 space-y-3">
+              <div class="h-8 bg-gray-200 rounded animate-pulse w-2/3"></div>
+              <div class="h-5 bg-gray-200 rounded animate-pulse w-1/2"></div>
+              <div class="h-5 bg-gray-200 rounded animate-pulse w-1/3"></div>
+            </div>
+            <div class="w-32 h-12 bg-gray-200 rounded-lg animate-pulse"></div>
+          </div>
+          <div class="space-y-2">
+            <div class="h-4 bg-gray-200 rounded animate-pulse"></div>
+            <div class="h-4 bg-gray-200 rounded animate-pulse w-5/6"></div>
+            <div class="h-4 bg-gray-200 rounded animate-pulse w-4/6"></div>
+          </div>
+        </div>
+
+        <!-- Skeleton Content -->
+        <div class="grid lg:grid-cols-3 gap-8">
+          <div class="lg:col-span-2 space-y-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm">
+              <div class="h-6 bg-gray-200 rounded animate-pulse w-1/4 mb-4"></div>
+              <div class="space-y-2">
+                <div class="h-4 bg-gray-200 rounded animate-pulse"></div>
+                <div class="h-4 bg-gray-200 rounded animate-pulse w-5/6"></div>
+                <div class="h-4 bg-gray-200 rounded animate-pulse w-4/6"></div>
+              </div>
+            </div>
+          </div>
+          <div class="space-y-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm">
+              <div class="h-6 bg-gray-200 rounded animate-pulse w-1/3 mb-4"></div>
+              <div class="space-y-3">
+                <div class="h-4 bg-gray-200 rounded animate-pulse"></div>
+                <div class="h-4 bg-gray-200 rounded animate-pulse w-3/4"></div>
+                <div class="h-4 bg-gray-200 rounded animate-pulse w-1/2"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error State -->
+      <div id="errorState" class="hidden text-center py-12">
+        <div class="max-w-md mx-auto">
+          <div class="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
+          </div>
+          <h2 class="text-2xl font-bold text-gray-900 mb-4">Job Not Found</h2>
+          <p class="text-gray-600 mb-6">The requested job posting could not be found or may have been removed.</p>
+          <button
+            onclick="goBack()"
+            class="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all font-medium"
+          >
+            Back to Job Listings
+          </button>
+        </div>
+      </div>
+
+      <!-- Job Content -->
+      <div id="jobContent" class="hidden">
+        <!-- Job Header -->
+        <div class="bg-white rounded-2xl p-8 shadow-sm mb-8">
+          <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+            <div class="flex items-start space-x-6">
+              <img
+                id="companyLogo"
+                src=""
+                alt="Company Logo"
+                class="w-20 h-20 rounded-xl object-cover shadow-md"
+              />
+              <div class="flex-1">
+                <h1 id="jobTitle" class="text-3xl font-bold text-gray-900 mb-2"></h1>
+                <div class="flex flex-wrap items-center gap-4 text-gray-600 mb-4">
+                  <div class="flex items-center space-x-2">
+                    <i class="fas fa-building"></i>
+                    <span id="jobCompany"></span>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span id="jobLocation"></span>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <i class="fas fa-clock"></i>
+                    <span id="jobType"></span>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <i class="fas fa-home"></i>
+                    <span id="jobRemote"></span>
+                  </div>
+                </div>
+                <div class="text-2xl font-bold text-blue-600" id="jobSalary"></div>
+              </div>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-3">
+              <button
+                id="applyBtn"
+                class="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2"
+              >
+                <i class="fas fa-paper-plane"></i>
+                <span>Apply Now</span>
+              </button>
+              <div class="flex space-x-2">
+                <button
+                  id="saveJobBtn"
+                  class="p-3 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                  title="Save Job"
+                >
+                  <i class="far fa-bookmark"></i>
+                </button>
+                <button
+                  id="shareJobBtn"
+                  class="p-3 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                  title="Share Job"
+                >
+                  <i class="fas fa-share"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Job Stats -->
+          <div class="mt-6 pt-6 border-t border-gray-200">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <div class="text-center">
+                <div class="text-2xl font-bold text-gray-900" id="applicationCount"></div>
+                <div class="text-sm text-gray-600">Applications</div>
+              </div>
+              <div class="text-center">
+                <div class="text-2xl font-bold text-gray-900" id="viewCount"></div>
+                <div class="text-sm text-gray-600">Views</div>
+              </div>
+              <div class="text-center">
+                <div class="text-sm font-medium text-gray-900" id="postedDate"></div>
+                <div class="text-sm text-gray-600">Posted</div>
+              </div>
+              <div class="text-center">
+                <div class="text-sm font-medium text-gray-900" id="deadlineDate"></div>
+                <div class="text-sm text-gray-600">Deadline</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid lg:grid-cols-3 gap-8">
+          <!-- Job Details -->
+          <div class="lg:col-span-2 space-y-8">
+            <!-- Job Description -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm">
+              <h2 class="text-xl font-bold text-gray-900 mb-4">Job Description</h2>
+              <p id="jobDescription" class="text-gray-700 leading-relaxed"></p>
+            </div>
+
+            <!-- Responsibilities -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm">
+              <button
+                data-accordion="responsibilities"
+                class="w-full flex items-center justify-between text-left"
+              >
+                <h2 class="text-xl font-bold text-gray-900">Key Responsibilities</h2>
+                <i id="responsibilities-chevron" class="fas fa-chevron-down text-gray-400 transition-transform"></i>
+              </button>
+              <div id="responsibilities-content" class="mt-4">
+                <ul id="responsibilitiesList" class="space-y-3"></ul>
+              </div>
+            </div>
+
+            <!-- Requirements -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm">
+              <button
+                data-accordion="requirements"
+                class="w-full flex items-center justify-between text-left"
+              >
+                <h2 class="text-xl font-bold text-gray-900">Requirements</h2>
+                <i id="requirements-chevron" class="fas fa-chevron-down text-gray-400 transition-transform"></i>
+              </button>
+              <div id="requirements-content" class="mt-4">
+                <ul id="requirementsList" class="space-y-3"></ul>
+              </div>
+            </div>
+
+            <!-- Preferred Qualifications -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm">
+              <button
+                data-accordion="preferred"
+                class="w-full flex items-center justify-between text-left"
+              >
+                <h2 class="text-xl font-bold text-gray-900">Preferred Qualifications</h2>
+                <i id="preferred-chevron" class="fas fa-chevron-down text-gray-400 transition-transform"></i>
+              </button>
+              <div id="preferred-content" class="mt-4 hidden">
+                <ul id="preferredQualificationsList" class="space-y-3"></ul>
+              </div>
+            </div>
+
+            <!-- Benefits -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm">
+              <button
+                data-accordion="benefits"
+                class="w-full flex items-center justify-between text-left"
+              >
+                <h2 class="text-xl font-bold text-gray-900">Benefits & Perks</h2>
+                <i id="benefits-chevron" class="fas fa-chevron-down text-gray-400 transition-transform"></i>
+              </button>
+              <div id="benefits-content" class="mt-4 hidden">
+                <ul id="benefitsList" class="space-y-3"></ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sidebar -->
+          <div class="space-y-6">
+            <!-- Company Information -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm">
+              <h3 class="text-lg font-bold text-gray-900 mb-4">About the Company</h3>
+              <div class="space-y-4">
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Company Size</span>
+                  <span id="companySize" class="font-medium"></span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Industry</span>
+                  <span id="companyIndustry" class="font-medium"></span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Founded</span>
+                  <span id="companyFounded" class="font-medium"></span>
+                </div>
+                <div class="pt-4 border-t border-gray-200">
+                  <p id="companyDescription" class="text-gray-700 text-sm leading-relaxed mb-4"></p>
+                  <a
+                    id="companyWebsite"
+                    href=""
+                    target="_blank"
+                    class="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                  ></a>
+                </div>
+                <button
+                  id="viewCompanyBtn"
+                  class="w-full bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors"
+                >
+                  View Company Profile
+                </button>
+              </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm">
+              <h3 class="text-lg font-bold text-gray-900 mb-4">Quick Actions</h3>
+              <div class="space-y-3">
+                <button class="w-full flex items-center space-x-3 p-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
+                  <i class="fas fa-flag text-gray-400"></i>
+                  <span>Report Job</span>
+                </button>
+                <button class="w-full flex items-center space-x-3 p-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
+                  <i class="fas fa-envelope text-gray-400"></i>
+                  <span>Email to Friend</span>
+                </button>
+                <button class="w-full flex items-center space-x-3 p-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
+                  <i class="fas fa-search text-gray-400"></i>
+                  <span>Similar Jobs</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Application Tips -->
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6">
+              <h3 class="text-lg font-bold text-gray-900 mb-4">
+                <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
+                Application Tips
+              </h3>
+              <ul class="space-y-2 text-sm text-gray-700">
+                <li class="flex items-start space-x-2">
+                  <i class="fas fa-check text-green-500 mt-1 flex-shrink-0"></i>
+                  <span>Tailor your resume to match the job requirements</span>
+                </li>
+                <li class="flex items-start space-x-2">
+                  <i class="fas fa-check text-green-500 mt-1 flex-shrink-0"></i>
+                  <span>Write a compelling cover letter</span>
+                </li>
+                <li class="flex items-start space-x-2">
+                  <i class="fas fa-check text-green-500 mt-1 flex-shrink-0"></i>
+                  <span>Research the company culture and values</span>
+                </li>
+                <li class="flex items-start space-x-2">
+                  <i class="fas fa-check text-green-500 mt-1 flex-shrink-0"></i>
+                  <span>Apply as soon as possible for better visibility</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Navigation Pills -->
+    <div class="fixed bottom-8 right-8 flex flex-col space-y-2 z-30">
+      <button
+        onclick="jobDescriptionManager.navigateToJob('prev')"
+        class="bg-white shadow-lg rounded-full p-3 hover:bg-gray-50 transition-all hover:shadow-xl group"
+        title="Previous job"
+      >
+        <i class="fas fa-chevron-up text-gray-600 group-hover:text-blue-600"></i>
+      </button>
+      <button
+        onclick="jobDescriptionManager.navigateToJob('next')"
+        class="bg-white shadow-lg rounded-full p-3 hover:bg-gray-50 transition-all hover:shadow-xl group"
+        title="Next job"
+      >
+        <i class="fas fa-chevron-down text-gray-600 group-hover:text-blue-600"></i>
+      </button>
+    </div>
+  </body>
+</html>

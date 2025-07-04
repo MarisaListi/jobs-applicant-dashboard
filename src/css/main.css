@@ -541,3 +541,47 @@ video::-webkit-media-controls-panel {
 video::-webkit-media-controls-play-button {
   display: none !important;
 }
+
+/* Enhanced Match Scores Layout */
+.match-score-compact {
+  transition: all 0.3s ease;
+}
+
+.match-score-compact:hover {
+  transform: translateY(-1px);
+}
+
+/* Video section enhancements */
+.video-stats-grid {
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+}
+
+/* Collapsible sections enhanced */
+.detailed-analysis-toggle {
+  transition: all 0.3s ease;
+}
+
+.detailed-analysis-toggle:hover {
+  background-color: #f8fafc;
+}
+
+/* Improved progress circles */
+.progress-circle-small {
+  filter: drop-shadow(0 2px 4px rgba(59, 130, 246, 0.1));
+}
+
+/* Interview response enhancements */
+.interview-summary-stats {
+  animation: slideInRight 0.5s ease-out 0.4s both;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

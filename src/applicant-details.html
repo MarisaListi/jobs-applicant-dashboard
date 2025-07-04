@@ -169,102 +169,106 @@
           <div class="space-y-6">
             <!-- Match Scores Card -->
             <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
-              <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-6">
-                <h2 class="text-xl font-bold text-white mb-1">Match Scores</h2>
+              <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-4">
+                <h2 class="text-lg font-bold text-white mb-1">Match Scores</h2>
                 <p class="text-blue-100 text-sm">AI-powered compatibility analysis</p>
               </div>
-              <div class="p-6">
-                <!-- Compact Layout: Overall Score (Left) + Individual Matches (Right) -->
-                <div class="flex flex-col md:flex-row gap-6 items-start">
-                  <!-- Left Side: Overall Score -->
-                  <div class="flex-shrink-0 text-center w-full md:w-auto">
-                    <div class="relative inline-flex items-center justify-center">
-                      <svg class="w-32 h-32 transform -rotate-90">
-                        <circle
-                          cx="64"
-                          cy="64"
-                          r="56"
-                          stroke="#e5e7eb"
-                          stroke-width="12"
-                          fill="none"
-                        />
-                        <circle
-                          id="overallProgressCircle"
-                          cx="64"
-                          cy="64"
-                          r="56"
-                          stroke="url(#gradient)"
-                          stroke-width="12"
-                          fill="none"
-                          stroke-dasharray="351.86"
-                          stroke-dashoffset="351.86"
-                          stroke-linecap="round"
-                          class="transition-all duration-1000"
-                        />
-                        <defs>
-                          <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" style="stop-color: #3b82f6" />
-                            <stop offset="100%" style="stop-color: #8b5cf6" />
-                          </linearGradient>
-                        </defs>
-                      </svg>
-                      <div class="absolute">
-                        <div id="overallScore" class="text-3xl font-bold text-gray-900">0%</div>
-                        <div class="text-xs text-gray-500">Overall</div>
+              <div class="p-4">
+                <!-- More Compact Layout with Overall Score at top -->
+                <div class="space-y-4">
+                  <!-- Overall Score - Compact Design -->
+                  <div class="flex items-center justify-between bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4">
+                    <div class="flex items-center space-x-3">
+                      <div class="relative">
+                        <svg class="w-16 h-16 transform -rotate-90">
+                          <circle
+                            cx="32"
+                            cy="32"
+                            r="28"
+                            stroke="#e5e7eb"
+                            stroke-width="6"
+                            fill="none"
+                          />
+                          <circle
+                            id="overallProgressCircle"
+                            cx="32"
+                            cy="32"
+                            r="28"
+                            stroke="url(#gradient)"
+                            stroke-width="6"
+                            fill="none"
+                            stroke-dasharray="175.93"
+                            stroke-dashoffset="175.93"
+                            stroke-linecap="round"
+                            class="transition-all duration-1000"
+                          />
+                          <defs>
+                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                              <stop offset="0%" style="stop-color: #3b82f6" />
+                              <stop offset="100%" style="stop-color: #8b5cf6" />
+                            </linearGradient>
+                          </defs>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                          <span id="overallScore" class="text-lg font-bold text-gray-900">0%</span>
+                        </div>
                       </div>
+                      <div>
+                        <h3 class="font-bold text-gray-900 text-lg">Overall Match</h3>
+                        <p class="text-sm text-gray-600">Combined compatibility score</p>
+                      </div>
+                    </div>
+                    <div class="text-right">
+                      <div class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                        Excellent
+                      </div>
+                      <div class="text-xs text-gray-500">AI Assessment</div>
                     </div>
                   </div>
 
-                  <!-- Right Side: Individual Matches -->
-                  <div class="flex-1 space-y-6 w-full">
+                  <!-- Individual Matches - Horizontal Grid -->
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <!-- Resume Match -->
-                    <div>
+                    <div class="bg-blue-50 rounded-lg p-4">
                       <div class="flex items-center justify-between mb-3">
                         <div class="flex items-center space-x-2">
-                          <div
-                            class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center"
-                          >
-                            <i class="fas fa-file-alt text-blue-600"></i>
+                          <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-file-alt text-blue-600 text-sm"></i>
                           </div>
                           <div>
-                            <h3 class="font-semibold text-gray-900">Resume Match</h3>
+                            <h4 class="font-semibold text-gray-900 text-sm">Resume</h4>
                             <p class="text-xs text-gray-500">Skills & Experience</p>
                           </div>
                         </div>
-                        <span id="resumeMatchScore" class="text-2xl font-bold text-blue-600"></span>
+                        <span id="resumeMatchScore" class="text-xl font-bold text-blue-600"></span>
                       </div>
-                      <div class="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
+                      <div class="w-full bg-blue-200 rounded-full h-2 overflow-hidden">
                         <div
                           id="resumeProgressBar"
-                          class="bg-gradient-to-r from-blue-500 to-blue-600 h-3 rounded-full transition-all duration-1000"
+                          class="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-1000"
                           style="width: 0%"
                         ></div>
                       </div>
                     </div>
 
                     <!-- Personality Match -->
-                    <div>
+                    <div class="bg-purple-50 rounded-lg p-4">
                       <div class="flex items-center justify-between mb-3">
                         <div class="flex items-center space-x-2">
-                          <div
-                            class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center"
-                          >
-                            <i class="fas fa-brain text-purple-600"></i>
+                          <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-brain text-purple-600 text-sm"></i>
                           </div>
                           <div>
-                            <h3 class="font-semibold text-gray-900">Personality Match</h3>
+                            <h4 class="font-semibold text-gray-900 text-sm">Personality</h4>
                             <p class="text-xs text-gray-500">Culture Fit</p>
                           </div>
                         </div>
-                        <span
-                          id="personalityMatchScore"
-                          class="text-2xl font-bold text-purple-600"
-                        ></span>
+                        <span id="personalityMatchScore" class="text-xl font-bold text-purple-600"></span>
                       </div>
-                      <div class="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
+                      <div class="w-full bg-purple-200 rounded-full h-2 overflow-hidden">
                         <div
                           id="personalityProgressBar"
-                          class="bg-gradient-to-r from-purple-500 to-purple-600 h-3 rounded-full transition-all duration-1000"
+                          class="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full transition-all duration-1000"
                           style="width: 0%"
                         ></div>
                       </div>
@@ -349,150 +353,117 @@
             </div>
 
             <!-- Resume Match Breakdown -->
-            <div class="bg-white rounded-2xl p-6 shadow-sm">
-              <h2 class="text-xl font-bold text-gray-900 mb-6">Detailed Analysis</h2>
-
-              <div class="space-y-4">
-                <!-- Education Level -->
-                <div
-                  class="border border-gray-100 rounded-xl p-4 hover:shadow-sm transition-shadow"
-                >
-                  <div
-                    class="flex items-center justify-between cursor-pointer"
-                    data-accordion="education"
-                  >
-                    <div class="flex items-center space-x-3">
-                      <div
-                        class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center"
-                      >
-                        <i class="fas fa-graduation-cap text-green-600"></i>
-                      </div>
-                      <div>
-                        <span class="text-gray-900 font-medium">Education Level</span>
-                        <div class="w-32 bg-gray-200 rounded-full h-1.5 mt-1">
-                          <div class="bg-green-500 h-1.5 rounded-full" style="width: 100%"></div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                      <span class="text-green-600 font-bold">100%</span>
-                      <i
-                        class="fas fa-chevron-down text-gray-400 transform transition-transform text-sm"
-                        id="education-chevron"
-                      ></i>
-                    </div>
-                  </div>
-                  <div class="hidden mt-3" id="education-content">
-                    <p id="educationDescription" class="text-sm text-gray-600 pl-13"></p>
-                  </div>
+            <div class="bg-white rounded-2xl p-4 shadow-sm">
+              <div class="flex items-center justify-between mb-4 cursor-pointer" onclick="toggleDetailedAnalysis()">
+                <h2 class="text-lg font-bold text-gray-900">Detailed Analysis</h2>
+                <div class="flex items-center space-x-2">
+                  <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">4 items</span>
+                  <i id="analysisChevron" class="fas fa-chevron-down text-gray-400 transform transition-transform text-sm"></i>
                 </div>
+              </div>
 
-                <!-- Experience -->
-                <div
-                  class="border border-gray-100 rounded-xl p-4 hover:shadow-sm transition-shadow"
-                >
-                  <div
-                    class="flex items-center justify-between cursor-pointer"
-                    data-accordion="experience"
-                  >
-                    <div class="flex items-center space-x-3">
-                      <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-briefcase text-blue-600"></i>
-                      </div>
-                      <div>
-                        <span class="text-gray-900 font-medium">Experience</span>
-                        <div class="w-32 bg-gray-200 rounded-full h-1.5 mt-1">
-                          <div class="bg-blue-500 h-1.5 rounded-full" style="width: 95%"></div>
+              <div id="detailedAnalysisContent" class="hidden">
+                <div class="space-y-3">
+                  <!-- Education Level -->
+                  <div class="border border-gray-100 rounded-lg p-3 hover:shadow-sm transition-shadow">
+                    <div class="flex items-center justify-between cursor-pointer" data-accordion="education">
+                      <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-green-50 rounded-lg flex items-center justify-center">
+                          <i class="fas fa-graduation-cap text-green-600 text-sm"></i>
+                        </div>
+                        <div>
+                          <span class="text-gray-900 font-medium text-sm">Education Level</span>
+                          <div class="w-24 bg-gray-200 rounded-full h-1 mt-1">
+                            <div class="bg-green-500 h-1 rounded-full" style="width: 100%"></div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                      <span class="text-blue-600 font-bold">95%</span>
-                      <i
-                        class="fas fa-chevron-down text-gray-400 transform transition-transform text-sm"
-                        id="experience-chevron"
-                      ></i>
-                    </div>
-                  </div>
-                  <div class="hidden mt-3" id="experience-content">
-                    <p class="text-sm text-gray-600 pl-13">
-                      The candidate has extensive experience in relevant technologies and
-                      demonstrates progressive career growth with increasing responsibilities in
-                      software development roles.
-                    </p>
-                  </div>
-                </div>
-
-                <!-- Skills -->
-                <div
-                  class="border border-gray-100 rounded-xl p-4 hover:shadow-sm transition-shadow"
-                >
-                  <div
-                    class="flex items-center justify-between cursor-pointer"
-                    data-accordion="skills"
-                  >
-                    <div class="flex items-center space-x-3">
-                      <div
-                        class="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center"
-                      >
-                        <i class="fas fa-code text-purple-600"></i>
+                      <div class="flex items-center space-x-2">
+                        <span class="text-green-600 font-bold text-sm">100%</span>
+                        <i class="fas fa-chevron-down text-gray-400 transform transition-transform text-xs" id="education-chevron"></i>
                       </div>
-                      <div>
-                        <span class="text-gray-900 font-medium">Technical Skills</span>
-                        <div class="w-32 bg-gray-200 rounded-full h-1.5 mt-1">
-                          <div class="bg-purple-500 h-1.5 rounded-full" style="width: 98%"></div>
+                    </div>
+                    <div class="hidden mt-2" id="education-content">
+                      <p id="educationDescription" class="text-xs text-gray-600 pl-11"></p>
+                    </div>
+                  </div>
+
+                  <!-- Experience -->
+                  <div class="border border-gray-100 rounded-lg p-3 hover:shadow-sm transition-shadow">
+                    <div class="flex items-center justify-between cursor-pointer" data-accordion="experience">
+                      <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center">
+                          <i class="fas fa-briefcase text-blue-600 text-sm"></i>
+                        </div>
+                        <div>
+                          <span class="text-gray-900 font-medium text-sm">Experience</span>
+                          <div class="w-24 bg-gray-200 rounded-full h-1 mt-1">
+                            <div class="bg-blue-500 h-1 rounded-full" style="width: 95%"></div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                      <span class="text-purple-600 font-bold">98%</span>
-                      <i
-                        class="fas fa-chevron-down text-gray-400 transform transition-transform text-sm"
-                        id="skills-chevron"
-                      ></i>
-                    </div>
-                  </div>
-                  <div class="hidden mt-3" id="skills-content">
-                    <p class="text-sm text-gray-600 pl-13">
-                      Excellent match with required technical skills including modern frameworks,
-                      programming languages, and development tools. Strong proficiency in both
-                      frontend and backend technologies.
-                    </p>
-                  </div>
-                </div>
-
-                <!-- Certification -->
-                <div
-                  class="border border-gray-100 rounded-xl p-4 hover:shadow-sm transition-shadow"
-                >
-                  <div
-                    class="flex items-center justify-between cursor-pointer"
-                    data-accordion="certification"
-                  >
-                    <div class="flex items-center space-x-3">
-                      <div class="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-certificate text-gray-400"></i>
+                      <div class="flex items-center space-x-2">
+                        <span class="text-blue-600 font-bold text-sm">95%</span>
+                        <i class="fas fa-chevron-down text-gray-400 transform transition-transform text-xs" id="experience-chevron"></i>
                       </div>
-                      <div>
-                        <span class="text-gray-900 font-medium">Certifications</span>
-                        <div class="w-32 bg-gray-200 rounded-full h-1.5 mt-1">
-                          <div class="bg-gray-300 h-1.5 rounded-full" style="width: 0%"></div>
+                    </div>
+                    <div class="hidden mt-2" id="experience-content">
+                      <p class="text-xs text-gray-600 pl-11">
+                        The candidate has extensive experience in relevant technologies and demonstrates progressive career growth with increasing responsibilities in software development roles.
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Skills -->
+                  <div class="border border-gray-100 rounded-lg p-3 hover:shadow-sm transition-shadow">
+                    <div class="flex items-center justify-between cursor-pointer" data-accordion="skills">
+                      <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-purple-50 rounded-lg flex items-center justify-center">
+                          <i class="fas fa-code text-purple-600 text-sm"></i>
+                        </div>
+                        <div>
+                          <span class="text-gray-900 font-medium text-sm">Technical Skills</span>
+                          <div class="w-24 bg-gray-200 rounded-full h-1 mt-1">
+                            <div class="bg-purple-500 h-1 rounded-full" style="width: 98%"></div>
+                          </div>
                         </div>
                       </div>
+                      <div class="flex items-center space-x-2">
+                        <span class="text-purple-600 font-bold text-sm">98%</span>
+                        <i class="fas fa-chevron-down text-gray-400 transform transition-transform text-xs" id="skills-chevron"></i>
+                      </div>
                     </div>
-                    <div class="flex items-center space-x-2">
-                      <span class="text-gray-400 font-bold">0%</span>
-                      <i
-                        class="fas fa-chevron-down text-gray-400 transform transition-transform text-sm"
-                        id="certification-chevron"
-                      ></i>
+                    <div class="hidden mt-2" id="skills-content">
+                      <p class="text-xs text-gray-600 pl-11">
+                        Excellent match with required technical skills including modern frameworks, programming languages, and development tools. Strong proficiency in both frontend and backend technologies.
+                      </p>
                     </div>
                   </div>
-                  <div class="hidden mt-3" id="certification-content">
-                    <p class="text-sm text-gray-600 pl-13">
-                      No relevant professional certifications found. This is not required for the
-                      position but could be beneficial for professional development.
-                    </p>
+
+                  <!-- Certification -->
+                  <div class="border border-gray-100 rounded-lg p-3 hover:shadow-sm transition-shadow">
+                    <div class="flex items-center justify-between cursor-pointer" data-accordion="certification">
+                      <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center">
+                          <i class="fas fa-certificate text-gray-400 text-sm"></i>
+                        </div>
+                        <div>
+                          <span class="text-gray-900 font-medium text-sm">Certifications</span>
+                          <div class="w-24 bg-gray-200 rounded-full h-1 mt-1">
+                            <div class="bg-gray-300 h-1 rounded-full" style="width: 0%"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="flex items-center space-x-2">
+                        <span class="text-gray-400 font-bold text-sm">0%</span>
+                        <i class="fas fa-chevron-down text-gray-400 transform transition-transform text-xs" id="certification-chevron"></i>
+                      </div>
+                    </div>
+                    <div class="hidden mt-2" id="certification-content">
+                      <p class="text-xs text-gray-600 pl-11">
+                        No relevant professional certifications found. This is not required for the position but could be beneficial for professional development.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -503,15 +474,18 @@
           <div class="space-y-6">
             <!-- Video Interview Card -->
             <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
-              <div class="p-6 pb-4">
-                <div class="flex items-center justify-between mb-4">
-                  <h2 class="text-xl font-bold text-gray-900">Video Interview</h2>
-                  <span class="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+              <div class="bg-gradient-to-r from-gray-900 to-gray-800 p-4">
+                <div class="flex items-center justify-between mb-2">
+                  <h2 class="text-lg font-bold text-white">Video Interview</h2>
+                  <span class="text-xs text-gray-300 bg-gray-700 px-3 py-1 rounded-full">
                     <i class="fas fa-clock mr-1"></i>2:45
                   </span>
                 </div>
-                <div class="relative group">
-                  <div class="aspect-video bg-gray-900 rounded-xl overflow-hidden">
+                <p class="text-gray-300 text-sm">Watch candidate introduction</p>
+              </div>
+              <div class="p-4">
+                <div class="relative group mb-4">
+                  <div class="aspect-video bg-gray-900 rounded-xl overflow-hidden shadow-lg">
                     <video
                       id="applicantVideo"
                       class="w-full h-full object-cover"
@@ -523,68 +497,107 @@
                     </video>
                     <div
                       id="videoOverlay"
-                      class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-center justify-center cursor-pointer group-hover:bg-black/40 transition-all"
+                      class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-center justify-center cursor-pointer group-hover:bg-black/50 transition-all"
                     >
                       <div
                         class="text-center text-white transform group-hover:scale-110 transition-transform"
                       >
                         <div
-                          class="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-4 mx-auto shadow-2xl group-hover:bg-white/30"
+                          class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-3 mx-auto shadow-2xl group-hover:bg-white/30"
                         >
-                          <i class="fas fa-play text-3xl ml-1"></i>
+                          <i class="fas fa-play text-2xl ml-1"></i>
                         </div>
-                        <p class="text-lg font-medium">Watch Introduction</p>
-                        <p class="text-sm opacity-75">Get to know the candidate</p>
+                        <p class="text-base font-medium">Watch Introduction</p>
+                        <p class="text-xs opacity-75">Get to know the candidate</p>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="px-6 pb-6">
+                
+                <!-- Video Stats and Actions -->
+                <div class="grid grid-cols-3 gap-3 mb-4">
+                  <div class="text-center bg-blue-50 rounded-lg p-3">
+                    <div class="text-lg font-bold text-blue-600">2:45</div>
+                    <div class="text-xs text-gray-600">Duration</div>
+                  </div>
+                  <div class="text-center bg-green-50 rounded-lg p-3">
+                    <div class="text-lg font-bold text-green-600">HD</div>
+                    <div class="text-xs text-gray-600">Quality</div>
+                  </div>
+                  <div class="text-center bg-purple-50 rounded-lg p-3">
+                    <div class="text-lg font-bold text-purple-600">👍</div>
+                    <div class="text-xs text-gray-600">Engaging</div>
+                  </div>
+                </div>
+
+                <!-- Video Actions -->
                 <div class="flex items-center justify-between text-sm">
                   <button
-                    class="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors"
+                    class="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors px-3 py-2 rounded-lg hover:bg-blue-50"
                   >
                     <i class="fas fa-thumbs-up"></i>
                     <span>Like</span>
                   </button>
                   <button
-                    class="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors"
+                    class="flex items-center space-x-2 text-gray-600 hover:text-green-600 transition-colors px-3 py-2 rounded-lg hover:bg-green-50"
                   >
                     <i class="fas fa-share"></i>
                     <span>Share</span>
                   </button>
                   <button
-                    class="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors"
+                    class="flex items-center space-x-2 text-gray-600 hover:text-purple-600 transition-colors px-3 py-2 rounded-lg hover:bg-purple-50"
                   >
                     <i class="fas fa-bookmark"></i>
                     <span>Save</span>
+                  </button>
+                  <button
+                    class="flex items-center space-x-2 text-gray-600 hover:text-orange-600 transition-colors px-3 py-2 rounded-lg hover:bg-orange-50"
+                  >
+                    <i class="fas fa-download"></i>
+                    <span>Download</span>
                   </button>
                 </div>
               </div>
             </div>
 
             <!-- Custom Questions Card -->
-            <div class="bg-white rounded-2xl p-6 shadow-sm">
-              <h2 class="text-xl font-bold text-gray-900 mb-6">Interview Responses</h2>
+            <div class="bg-white rounded-2xl p-4 shadow-sm">
+              <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-bold text-gray-900">Interview Responses</h2>
+                <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                  4 questions
+                </span>
+              </div>
 
-              <div class="space-y-4" id="customQuestions">
+              <div class="space-y-3 mb-4" id="customQuestions">
                 <!-- Questions will be populated here -->
               </div>
 
+              <!-- Interview Summary Stats -->
+              <div class="grid grid-cols-2 gap-3 mb-4 p-3 bg-gray-50 rounded-lg">
+                <div class="text-center">
+                  <div class="text-lg font-bold text-blue-600">4/4</div>
+                  <div class="text-xs text-gray-600">Completed</div>
+                </div>
+                <div class="text-center">
+                  <div class="text-lg font-bold text-green-600">⭐⭐⭐⭐⭐</div>
+                  <div class="text-xs text-gray-600">Quality</div>
+                </div>
+              </div>
+
               <!-- Quick Actions -->
-              <div class="mt-6 pt-6 border-t border-gray-100">
+              <div class="pt-4 border-t border-gray-100">
                 <div class="grid grid-cols-2 gap-3">
                   <button
-                    class="px-4 py-3 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100 transition-colors text-sm font-medium flex items-center justify-center space-x-2"
+                    class="px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors text-sm font-medium flex items-center justify-center space-x-2"
                   >
-                    <i class="fas fa-calendar-alt"></i>
+                    <i class="fas fa-calendar-alt text-sm"></i>
                     <span>Schedule Interview</span>
                   </button>
                   <button
-                    class="px-4 py-3 bg-green-50 text-green-600 rounded-xl hover:bg-green-100 transition-colors text-sm font-medium flex items-center justify-center space-x-2"
+                    class="px-3 py-2 bg-green-50 text-green-600 rounded-lg hover:bg-green-100 transition-colors text-sm font-medium flex items-center justify-center space-x-2"
                   >
-                    <i class="fas fa-comments"></i>
+                    <i class="fas fa-comments text-sm"></i>
                     <span>Start Chat</span>
                   </button>
                 </div>
@@ -646,5 +659,23 @@
         <i class="fas fa-chevron-down text-gray-600 group-hover:text-blue-600"></i>
       </button>
     </div>
+    
+    <script>
+      // Toggle function for detailed analysis section
+      function toggleDetailedAnalysis() {
+        const content = document.getElementById('detailedAnalysisContent');
+        const chevron = document.getElementById('analysisChevron');
+        
+        if (content.classList.contains('hidden')) {
+          content.classList.remove('hidden');
+          chevron.classList.remove('fa-chevron-down');
+          chevron.classList.add('fa-chevron-up');
+        } else {
+          content.classList.add('hidden');
+          chevron.classList.remove('fa-chevron-up');
+          chevron.classList.add('fa-chevron-down');
+        }
+      }
+    </script>
   </body>
 </html>
